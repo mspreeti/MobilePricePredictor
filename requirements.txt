@@ -10,4 +10,3 @@ scipy>=0.15.1
 matplotlib>=1.4.3
 pandas>=0.19
 streamlit
-cython==0.28.5
