@@ -1,17 +1,18 @@
 import pandas as pd
 import numpy as np
-
+from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 
 df=pd.read_csv('train.csv')
 df_test = pd.read_csv('test.csv')
 
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.linear_model import LogisticRegression
 
-X = pd.DataFrame(np.c_[df['ram'],df['px_height'],df['battery_power'],df['px_width']],columns = ['ram','px_height','battery_power','px_width'])
+X = X = pd.DataFrame(np.c_[df['ram'],df['px_height'],df['battery_power'],df['px_width']],columns = ['ram','px_height','battery_power','px_width'])
 Y = df['price_range']
 
-from sklearn.model_selection import train_test_split
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.25, random_state=5)
 print(X_train.shape)
@@ -19,30 +20,22 @@ print(X_test.shape)
 print(Y_train.shape)
 print(Y_test.shape)
 
-model1 = LinearRegression()
-model1.fit(X_train,Y_train)
+from sklearn.metrics import confusion_matrix
+scaler = preprocessing.StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.fit_transform(X_test)
 
-# Model Evaluation for training set
-y_train_predict = model1.predict(X_train)
-rmse = (np.sqrt(mean_squared_error(Y_train, y_train_predict)))
-r2 = r2_score(Y_train, y_train_predict)
-
-print('RMSE for training data is {}'.format(rmse))
-print('R2 score for training data is {}'.format(r2))
-print("\n")
+model1 = LogisticRegression(solver='lbfgs')
+model1.fit(X_train_scaled,Y_train)
 
 # model evaluation for testing set
-y_test_predict = model1.predict(X_test)
-rmse = (np.sqrt(mean_squared_error(Y_test, y_test_predict)))
-r2 = r2_score(Y_test, y_test_predict)
+y_test_predict = model1.predict(X_test_scaled)
 
-print('RMSE for testing data is {}'.format(rmse))
-print('R2 score for testing data is {}'.format(r2))
+confusionm = confusion_matrix(Y_test, y_test_predict)
+print(confusionm)
 
-print(model1.coef_)
-print("The model intercept is: ", model1.intercept_)
-#pd.DataFrame(model1.coef_,df.columns,columns=['Coeff'])
-
+ac = accuracy_score(Y_test, y_test_predict)*100
+print(ac)
 
 import pickle
 pickle_out = open("model1.pkl","wb")
