@@ -14,4 +14,4 @@ Bob wants to find out some relation between features of a mobile phone(eg:- RAM,
 
 In this problem you do not have to predict actual price but a price range indicating how high the price is.
 
-Linear Regression model is employed to get the information on the price. This is my first ML project and first contribution on KAGGLE.
+Logistic Regression model is employed to get the information on the price. This is my first ML project and first contribution on KAGGLE.
